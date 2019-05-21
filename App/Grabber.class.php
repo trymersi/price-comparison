@@ -79,8 +79,11 @@ class Grabber
 
 			}
 		}
-		
-		return $data;
+		return $produk;
+	}
+
+	public function GetSearchLazada($kw)
+	{
 
 	}
 }
