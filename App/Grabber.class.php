@@ -84,6 +84,11 @@ class Grabber
 
 	public function GetSearchLazada($kw)
 	{
+		$kw = $this->fungsi->BersihKW($kw);
+		$url = "https://www.lazada.co.id/catalog/?q=".$kw."&_keyori=ss&from=input&spm=a2o4j.searchlist.search.go.4c3d6cf0OYOxLh";
+		$data = $this->fungsi->getData($url);
+		print_r($data);
+
 
 	}
 }
