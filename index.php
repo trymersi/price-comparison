@@ -14,5 +14,7 @@ DEKLARASIKAN CLASS
 $grabber = new App\Grabber();
 $fungsi = new App\Fungsi();
 
-$data = $grabber->GetSearchTokopedia('motherboard asus x470 am4');
-print_r($data);
+$data = $grabber->getData('laptop asus');
+
+// $data = $grabber->getData('laptop asus');
+// print_r($data);

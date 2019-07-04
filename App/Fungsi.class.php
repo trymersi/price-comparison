@@ -103,45 +103,55 @@ Class Fungsi
 
 	public function getData($url)
 	{
-	    $referer = 'https://www.youtube.com';
-    $header[] = "Accept-Language: en";
-	$header[] = "Pragma: no-cache";
-	$header[] = "Cache-Control: no-cache";
-	$header[] = "Accept-Encoding: gzip,deflate";
-	$header[] = "Content-Encoding: gzip";
-	$header[] =  "Content-Type: application/json";
-	$header[] =  "ghiwar:gh1w4r1001";
-	$ch = curl_init();
+		$options = array(
+	        CURLOPT_RETURNTRANSFER => true,     // return web page
+	        CURLOPT_HEADER         => false,    // don't return headers
+	        CURLOPT_FOLLOWLOCATION => true,     // follow redirects
+	        CURLOPT_ENCODING       => "",       // handle all encodings
+	        CURLOPT_USERAGENT      => "spider", // who am i
+	        CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+	        CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
+	        CURLOPT_TIMEOUT        => 120,      // timeout on response
+	        CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+	        CURLOPT_SSL_VERIFYPEER => false     // Disabled SSL Cert checks
+	    );
 
-	curl_setopt( $ch, CURLOPT_URL, $url );
-	curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
-	curl_setopt( $ch, CURLOPT_ENCODING, "gzip,deflate" );
-	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, TRUE );
-	curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 5 );
-	curl_setopt( $ch, CURLOPT_TIMEOUT, 10);
-	curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, TRUE );
-	curl_setopt( $ch, CURLOPT_USERAGENT, 'Opera/9.80 (BlackBerry; Opera Mini/4.5.33868/37.8993; HD; en_US) Presto/2.12.423 Version/12.16' );
-	if ( $referer ) {
-		$header[] = "Referer: " . $referer;
+	    $ch      = curl_init( $url );
+	    curl_setopt_array( $ch, $options );
+	    $content = curl_exec( $ch );
+	    $err     = curl_errno( $ch );
+	    $errmsg  = curl_error( $ch );
+	    $header  = curl_getinfo( $ch );
+	    curl_close( $ch );
+
+	    $header['errno']   = $err;
+	    $header['errmsg']  = $errmsg;
+	    $header['content'] = $content;
+	    return $header;
 	}
 
-	curl_setopt( $ch, CURLOPT_HTTPHEADER, $header );
-
-	$data = curl_exec( $ch );
-	$info = curl_getinfo( $ch );
-
-	curl_close( $ch );
-
-	return $data;
-	}
-
-	public function get_words($sentence, $count = 4) {
+	public function get_words($sentence, $count = 6) {
  	 	preg_match("/(?:\w+(?:\W+|$)){0,$count}/", $sentence, $matches);
   		return $matches[0];
 	}
 	public function filterKeyword($kw)
 	{
+
+		$replace = $this->BersihKW($kw);
+		$replace = str_replace('+',' ',$replace);
+		$replace = htmlspecialchars_decode($replace);
 		$filter = [
+			'&quot;',
+			'13"',
+			'14"',
+			'15"',
+			'17"',
+			'13',
+			'15',
+			'17',
+			"13'",
+			"15'",
+			"17'",
 			'INTEL HD GRAPHICS',
 			'Garansi Resmi',
 			'1 GB',
@@ -150,18 +160,45 @@ Class Fungsi
 			'8 GB',
 			'16 GB',
 			'32 GB',
+			'1GB',
+			'2GB',
+			'Win10',
+			'4GB',
+			'8GB',
+			'16 GB',
+			'32 GB',
 			'WIN10',
 			'FINGERPRINT',
 			'1TB',
 			'350GB',
 			'2TB',
 			'HDD',
-			'-',',','.','+','"','/',
+			'-',',','.','+','"','/','&',
 			
 
 		];
-		$replace = str_replace($filter, ' ', $kw);
+		$replace = str_replace($filter, ' ', $replace);
 		$output = preg_replace('!\s+!', ' ', $replace);
-		return $this->get_words($output);
+		$replace = preg_replace('/\s+/', ' ', $replace);
+		$replace = str_replace('quot','', $replace);
+		$replace = $this->get_words($replace);
+		
+		return rtrim($replace);
+	}
+
+	public function bersihKurung($data)
+	{
+		$bersih = strip_tags($data);
+		$replace1 = str_replace('(','',$bersih);
+		$replace2 = str_replace(')','',$replace1);
+		return $replace2;
+	}
+
+	public function bersihRp($kw)
+	{
+		$bersih = str_replace('Rp ', '', $kw);
+		$bersih = str_replace('.', '', $bersih);
+		$bersih = str_replace(',', '', $bersih);
+		return $bersih;
 	}
 }
