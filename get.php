@@ -9,7 +9,6 @@ PANGGIL FILE CLASS
 require 'vendor/autoload.php';
 include_once 'App/Grabber.class.php';
 include_once 'App/Fungsi.class.php';
-
 /*
 DEKLARASIKAN CLASS
 */
@@ -17,33 +16,22 @@ $grabber = new App\Grabber();
 $fungsi = new App\Fungsi();
 
 
-if($_GET['type'] == 'search')
+if(isset($_GET))
 {
-	if(isset($_GET['kw']))
-	{
-		$toko = $_GET['toko'];
-		$filter = $_GET['filter'];
-
-		$data = $grabber->getData($_GET['kw'],$toko,$filter);
-		echo json_encode($data);
+	switch ($_GET['type']) {
+		case 'ulasan':
+			echo json_encode($grabber->getUlasanList()) ;
+			break;
+		case 'pencarian':
+			echo json_encode($grabber->getkw()) ;
+			break;
 		
-	}
-}
-else
-{
-	if(isset($_GET['filter']))
-	{
-		$data = $grabber->getDetail($_GET['id'],$_GET['toko'],$_GET['kw'],$_GET['filter']);
-	}
-	else
-	{
-		$data = $grabber->getDetail($_GET['id'],$_GET['toko'],$_GET['kw']);
+		default:
+			# code...
+			break;
 	}
 	
-	echo json_encode($data);
 }
-
-
 
 
 // $data = $grabber->GetDetailTokopedia('https://www.tokopedia.com/zoemi88/laptop-asus-murah?trkid=f=Ca0000L000P0W0S0Sh,Co0Po0Fr0Cb0_src=catalog_page=1_ob=23_q=_po=2_catid=289');

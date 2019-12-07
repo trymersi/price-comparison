@@ -201,4 +201,12 @@ Class Fungsi
 		$bersih = str_replace(',', '', $bersih);
 		return $bersih;
 	}
+
+	public function bukalapakGetID($url)
+	{
+		$pecah = explode('/',$url);
+		$hitung = count($pecah);
+		$pecah = explode('-',$pecah[$hitung-1]);
+		return $pecah[0];
+	}
 }

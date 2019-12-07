@@ -9,7 +9,6 @@ PANGGIL FILE CLASS
 require 'vendor/autoload.php';
 include_once 'App/Grabber.class.php';
 include_once 'App/Fungsi.class.php';
-
 /*
 DEKLARASIKAN CLASS
 */
@@ -17,32 +16,12 @@ $grabber = new App\Grabber();
 $fungsi = new App\Fungsi();
 
 
-if($_GET['type'] == 'search')
-{
-	if(isset($_GET['kw']))
-	{
-		$toko = $_GET['toko'];
-		$filter = $_GET['filter'];
 
-		$data = $grabber->getData($_GET['kw'],$toko,$filter);
-		echo json_encode($data);
-		
-	}
-}
-else
+if(isset($_POST))
 {
-	if(isset($_GET['filter']))
-	{
-		$data = $grabber->getDetail($_GET['id'],$_GET['toko'],$_GET['kw'],$_GET['filter']);
-	}
-	else
-	{
-		$data = $grabber->getDetail($_GET['id'],$_GET['toko'],$_GET['kw']);
-	}
-	
-	echo json_encode($data);
+	$grabber->saveUlasan($_POST);
+	echo json_encode($_POST);
 }
-
 
 
 
