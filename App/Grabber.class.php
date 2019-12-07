@@ -1,15 +1,27 @@
 <?php
 namespace App;
+<<<<<<< HEAD
 
 require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 use App\Fungsi;
+=======
+/**
+GRABBER CLASS
+AUTHOR : TRY MERSIANTO <TRY.MERSIANTO@GMAIL.COM>
+*/
+require "vendor/autoload.php";
+use PHPHtmlParser\dom;
+use App\Fungsi;
+//include_once ''
+>>>>>>> 0d70408a8cb5cd6b28ecbe5e7cadf38dc5fde82e
 class Grabber
 {
 	function __construct()
 	{
 		$this->dom = new Dom;
 		$this->fungsi = new Fungsi;
+<<<<<<< HEAD
 		$this->connect = mysqli_connect("localhost", "ranti", "10011994", "ranti");		
 		$this->limit = 10;
 	}
@@ -317,6 +329,8 @@ class Grabber
 			}
 			
 		
+=======
+>>>>>>> 0d70408a8cb5cd6b28ecbe5e7cadf38dc5fde82e
 	}
 
 	public function GetSearchTokopedia($kw)
@@ -334,6 +348,7 @@ class Grabber
 				{
 					$data = $data['data']['products'];
 					$i = 0;
+<<<<<<< HEAD
 					$total = 1;
 					foreach($data as $key)
 					{
@@ -343,6 +358,12 @@ class Grabber
 						$produk[$i]['kode_toko'] = '1';
 						$produk[$i]['kode_panggil'] = base64_encode($key['url']);
 						$produk[$i]['url'] = base64_encode($key['url']);
+=======
+					foreach($data as $key)
+					{
+						$produk[$i]['nama_produk'] = $key['name'];
+						$produk[$i]['url'] = $key['url'];
+>>>>>>> 0d70408a8cb5cd6b28ecbe5e7cadf38dc5fde82e
 						$produk[$i]['gambar'] = $key['image_url'];
 						$produk[$i]['harga'] = $key['price_int'];
 						$produk[$i]['rating'] = $key['rating'];
@@ -351,6 +372,7 @@ class Grabber
 						$produk[$i]['kategori_barang'] = $key['category_name'];
 						$produk[$i]['diskon'] = $key['discount_percentage'];
 						$produk[$i]['nama_related'] = $this->fungsi->filterKeyword($key['name']);
+<<<<<<< HEAD
 						$produk[$i]['nama_toko'] = $key['shop']['name'];
 						$produk[$i]['kota_toko'] = $key['shop']['location'];
 						$produk[$i]['jumlah_kurir'] = $key['courier_count'];
@@ -362,6 +384,10 @@ class Grabber
 							break;
 						}
 						$total++;
+=======
+
+						$i++;
+>>>>>>> 0d70408a8cb5cd6b28ecbe5e7cadf38dc5fde82e
 					}
 					return $produk;
 				}
@@ -374,6 +400,7 @@ class Grabber
 	{
 		$produk = array();
 		$kw = $this->fungsi->BersihKW($kw);
+<<<<<<< HEAD
 		//$url = "https://api.bukalapak.com/v2/products.json?keywords=".$kw."&conditions\[\]=new";
 		$url = "https://www.bukalapak.com/products?utf8=%E2%9C%93&source=navbar&from=omnisearch&search_source=omnisearch_organic&search%5Bhashtag%5D=&search%5Bkeywords%5D=".$kw;
 		$data = $this->fungsi->getData($url);
@@ -860,6 +887,32 @@ class Grabber
 			$ar[] = ucwords(str_replace('+',' ',$r['keyword']));
 		}
 		return $ar;
+=======
+		$url = "https://api.bukalapak.com/v2/products.json?keywords=".$kw."&conditions\[\]=new";
+		$data = $this->fungsi->getData($url);
+		$data = json_decode($data,true);
+		if(count($data['products']) != 0 )
+		{
+			$i = 0;
+			foreach($data['products'] as $key)
+			{
+				$produk[$i]['nama_produk'] = $key['name'];
+				$produk[$i]['url'] = $key['url'];
+				$produk[$i]['gambar'] = $key['images'][0];
+				$produk[$i]['harga'] = $key['price'];
+				$produk[$i]['rating'] = $key['rating']['average_rate'];
+				$produk[$i]['ulasan'] = $key['rating']['user_count'];
+				$produk[$i]['kondisi'] = $key['condition'];
+				$produk[$i]['kategori_barang'] = $key['category_structure'][0];
+				$produk[$i]['diskon'] =0;
+				$produk[$i]['nama_related'] = $this->fungsi->filterKeyword($key['name']);
+				$i++;
+
+			}
+		}
+		
+		return $data;
+>>>>>>> 0d70408a8cb5cd6b28ecbe5e7cadf38dc5fde82e
 
 	}
 }
